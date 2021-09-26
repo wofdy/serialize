@@ -257,11 +257,32 @@ namespace custom {
         if (sz[0] == '-') {
             bMinus = true;
         }
-        for (uint32_t idx = bMinus, bFlag = false, num = 0; idx < length; ++idx) {
+        bool F_E = false;
+        float scale = 1.0f;
+        for (uint32_t idx = (bMinus ? 1 : 0), bFlag = false, num = 0; idx < length; ++idx) {
             const char& c = sz[idx];
             if (c == '.') {
                 bFlag = true;
                 continue;
+            }
+            if (c == 'e') {
+                F_E = true;
+                continue;
+            }
+            if (F_E) {
+                if (c == '-') {
+                    continue;
+                }
+                if (c >= '0' && c <= '9') {
+                    uint8_t num = c - '0';
+                    if (num > 1) {
+                        scale = decimal(1, num);
+                    } else if(num == 1){
+                        scale = 0.1f;
+                    }
+                    continue;
+                }
+                
             }
             uint8_t n = c - '0';
             if (!bFlag) {
@@ -272,7 +293,12 @@ namespace custom {
                 value += decimal(n, num);
             }
         }
-        if (bMinus) value = 0 - value;
+        if (bMinus) {
+            value = 0 - value;
+        }
+        if (F_E) {
+            value *= scale;
+        }
     }
 
     void Handler::convert(double& value, const char* sz, uint32_t length) {
@@ -454,7 +480,7 @@ namespace custom {
         const char* szStart = is.Strart();
 
         for (; is.Peek() != '\0'; is.Take()) {
-            if (is.Peek() == '-' || is.Peek() == '.' || (is.Peek() >= '0' && is.Peek() <= '9')) {
+            if (is.Peek() == '-' || is.Peek() == '.' || (is.Peek() >= '0' && is.Peek() <= '9') || is.Peek() == 'e') {
                 continue;
             } else {
                 handler.Value(szStart, is.Strart() - szStart);

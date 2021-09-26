@@ -6,6 +6,9 @@
 #include <stack>
 #include <string>
 
+#if 1
+#define EXPORTAPI
+#else
 #ifdef _MSC_VER
 #ifdef EXPORTAPI 
 #define EXPORTAPI _declspec(dllimport)
@@ -14,6 +17,7 @@
 #endif
 #else
 #define EXPORTAPI
+#endif
 #endif
 
 namespace custom {

@@ -2,14 +2,19 @@
 #define __SERIALIZE_MACRO_H__
 
 #include <stdlib.h>
-#ifdef _MSC_VER
-#ifdef EXPORTAPI 
-#define EXPORTAPI _declspec(dllimport)
-#else 
-#define EXPORTAPI _declspec(dllexport)
-#endif
-#else
+
+#if 1
 #define EXPORTAPI
+#else
+    #ifdef _MSC_VER
+    #ifdef EXPORTAPI 
+    #define EXPORTAPI _declspec(dllimport)
+    #else 
+    #define EXPORTAPI _declspec(dllexport)
+    #endif
+    #else
+    #define EXPORTAPI
+    #endif
 #endif
 
 #include <stdint.h>
@@ -188,8 +193,12 @@ namespace serialize {
             };
             //double
             template<> struct type<double> {
-                static inline double strto(const char* str) { return atof(str); }
-                static inline const char* tostr(double v) { sprintf(szTransbuf, "%lf", v); return szTransbuf; }
+                static inline double strto(const char* str) {
+                    return atof(str);
+                }
+                static inline const char* tostr(double v) {
+                    sprintf(szTransbuf, "%lf", v); return szTransbuf;
+                }
             };
             //char*
             template<> struct type<char*> {

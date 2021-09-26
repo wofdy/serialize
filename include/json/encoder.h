@@ -1,10 +1,12 @@
 #ifndef __JSON_ENCODER_H__
 #define __JSON_ENCODER_H__
-#include "serialize.h"
+
+//#include "serialize.h"
+#include "./../serialize.h"
 #include <vector>
 #include <map>
-#include "thirdParty/json/GenericWriter.h"
-
+//#include "thirdParty/json/GenericWriter.h"
+#include "./../../thirdParty/json/GenericWriter.h"
 
 namespace serialize {
 
